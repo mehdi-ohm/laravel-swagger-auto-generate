@@ -23,11 +23,13 @@ class Swagger
      */
     public function swagger()
     {
-        return [
+        $swaggerClass = $this->generateSwaggerJsonResponse();
+
+        $swagger = [
             "openapi" => "3.0.3",
             "info" => [
                 "title" => config('swagger.title'),
-                "description" => config('swagger.description'),
+                "description" => config('swagger.description') ?: '',
                 "termsOfService" => "http://swagger.io/terms/",
                 "contact" => [
                     "email" => config('swagger.email'),
@@ -39,10 +41,15 @@ class Swagger
                 "version" => config('swagger.version')
             ],
             "servers" => config('swagger.servers'),
-            "components" => $this->generateSwaggerJsonResponse(),
-            "tags" => $this->generateSwaggerJsonResponse()->tags,
-            "paths" => $this->generateSwaggerJsonResponse()->paths,
+            "tags" => $swaggerClass->tags,
+            "paths" => $swaggerClass->paths,
         ];
+
+        unset($swaggerClass->tags);
+        unset($swaggerClass->paths);
+        $swagger["components"] = $swagger;
+
+        return $swagger;
     }
 
 
@@ -88,6 +95,7 @@ class Swagger
                         if ($action !== 'Closure') {
                             $description = isset($route->action['description']) ? $route->action['description'] : '';
                             $summary = isset($route->action['summary']) ? $route->action['summary'] : null;
+                            $responses = $route->action['responses'] ?? [];
                             $prefix_for_condition = isset($show_prefix_array) && count($show_prefix_array) > 0 ? $show_prefix_array : ["$prefix"];
                             if (in_array($prefix, $prefix_for_condition)) {
                                 $hasSchema = false;
@@ -123,6 +131,7 @@ class Swagger
                                     'middleware' => $route->middleware(),
                                     'validations' => $validations,
                                     'params' => $this->formatParams($validations, $route),
+                                    'responses' => $responses,
                                     'operation_id' => $operationId,
                                     'has_schema' => $hasSchema,
                                     'need_token' => $needToken

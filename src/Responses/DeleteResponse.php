@@ -36,7 +36,7 @@ class DeleteResponse
                 "{$route['controller']}"
             ],
             "summary" => self::getSummary($route),
-            "description" => "{$route['description']}",
+            "description" => $route['description'] ?: '',
             "operationId" => $route['operation_id'],
             "parameters" => $route['params'],
             "responses" => self::getResponses(),

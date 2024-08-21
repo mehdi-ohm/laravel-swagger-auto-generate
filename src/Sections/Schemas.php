@@ -23,7 +23,6 @@ trait Schemas
     public function defaultSchemaFormat(string $name): array
     {
         return [
-            "required" => [],
             "type" => "object",
             "properties" => [],
             "xml" => [
@@ -41,8 +40,10 @@ trait Schemas
         }
         [$validation_content, $required] = $this->generateGenericRequiredAndRules($validations, $method);
 
+        if ($required) {
+            $schemas["required"] = $required;
+        }
 
-        $schemas["required"] = $required;
         foreach ($validation_content as $column_name => $validation_value) {
             if (!str_contains($column_name, "[merge_input]")) {
                 $name = $this->getInputName($column_name);
@@ -65,7 +66,11 @@ trait Schemas
         }
 
         [$validation_content, $required] = $this->generateGenericRequiredAndRules($validations, $method);
-        $schemas["required"] = $required;
+
+        if ($required) {
+            $schemas["required"] = $required;
+        }
+
         foreach ($validation_content as $column_name => $validation_value) {
             if (strpos($column_name, '.') !== false && !str_contains($column_name, ".*")) {
                 $this->addNestedProperty($schemas["properties"], $column_name, $validation_value);
@@ -244,7 +249,13 @@ trait Schemas
     {
         $schema = [];
         if (str_contains($validation_value, $condition)) {
-            $schema[$key] = $value;
+            if ($value === 'true') {
+                $schema[$key] = true;
+            } elseif ($value === 'false') {
+                $schema[$key] = false;
+            } else {
+                $schema[$key] = $value;
+            }
         }
         return $schema;
     }

@@ -10,7 +10,7 @@ trait Tags {
         foreach ($controllers as $controller) {
             $tags[] = [
                 'name' => $controller['name'],
-                'description' => $controller['description']
+                'description' => $controller['description'] ?: ''
             ];
         }
         return $tags;
