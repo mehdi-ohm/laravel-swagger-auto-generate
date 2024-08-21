@@ -47,7 +47,7 @@ class Swagger
 
         unset($swaggerClass->tags);
         unset($swaggerClass->paths);
-        $swagger["components"] = $swagger;
+        $swagger["components"] = $swaggerClass;
 
         return $swagger;
     }
