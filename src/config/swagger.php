@@ -57,16 +57,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Swagger Access
+    | Route middleware
     |--------------------------------------------------------------------------
     |
-    | Swagger access rules.
-    | Currently support only a list of middlewares.
-    | Guest access by default.
+    | List of middleware used for all swagger route.
+    | Use this for configure the swagger access rules.
+    | Use this for dynamically change the swagger configuration, like to preauthorize.
     |
     */
-    "access" => [
-        "middlewares" => [],
+    "routes" => [
+        "middlewares" => [
+            // Examples:
+            // 'auth',
+            // 'can:swagger-access',
+        ],
     ],
 
     /*
@@ -174,6 +178,21 @@ return [
             "name" => "key1",
             "in" => "query"
         ]
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Preauthorize ApiKey
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for preauthorizing API requests with an API key.
+    |
+    */
+    'security_preauthorize' => [
+        'api_key' => [
+            'authorization' => null,
+        ],
     ],
 
 

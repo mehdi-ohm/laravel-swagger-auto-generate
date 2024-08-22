@@ -184,6 +184,13 @@
                     response.headers['content-type'] = 'application/json';
                     response.headers['accept'] = 'application/json';
                     return response;
+                },
+                onComplete: function() {
+                    @foreach(config('swagger.security_preauthorize.api_key') ?: [] as $preauthorizeKey => $preauthorizeToken)
+                        @if($preauthorizeToken)
+                            ui.preauthorizeApiKey("{!! $preauthorizeKey !!}", "{!! $preauthorizeToken !!}");
+                        @endif
+                    @endforeach
                 }
             });
         };

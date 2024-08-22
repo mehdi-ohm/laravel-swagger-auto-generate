@@ -5,7 +5,7 @@ use G4T\Swagger\Controllers\IssueController;
 use G4T\Swagger\Swagger;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(config('swagger.access.middlewares', null))->group(function () {
+Route::middleware(config('swagger.routes.middlewares', null))->group(function () {
     $url = config("swagger.url");
     $issues_url = config("swagger.issues_url");
 
