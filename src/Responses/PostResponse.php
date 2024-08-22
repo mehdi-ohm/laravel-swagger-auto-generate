@@ -40,12 +40,12 @@ class PostResponse
             "requestBody" => [
                 "description" => $route['description'] ?: '',
                 "content" => [
-                    "multipart/form-data" => [
+                    "application/json" => [
                         "schema" => [
                             '$ref' => "#/components/schemas/{$route['schema_name']}"
                         ]
                     ],
-                    "application/json" => [
+                    "multipart/form-data" => [
                         "schema" => [
                             '$ref' => "#/components/schemas/{$route['schema_name']}"
                         ]

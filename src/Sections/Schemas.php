@@ -14,6 +14,31 @@ trait Schemas
             $schema = $this->generateSchemaNested($validations, $name, $method);
         } else {
             $schema = $this->generateGenericSchema($validations, $name, $method);
+
+            if (config('swagger.schema.simple_array')) {
+                // Replace "[merge_input]" by simplified "[]"
+                foreach ($schema['properties'] as $key => $value) {
+                    $newKey = str_replace('[merge_input]', '[]', $key);
+                    if ($key !== $newKey) {
+                        $schema['properties'][$newKey] = $value;
+                        unset($schema['properties'][$key]);
+                    }
+                }
+
+                // Remove redondante definition (multiple array cases)
+                foreach ($schema['properties'] as $key1 => $value1) {
+                    if (preg_match('/(.*)\[\]$/', $key1)) {
+                        $compare = '/'.preg_quote(rtrim($key1, ']')).'(.+)$/';
+
+                        foreach ($schema['properties'] as $key2 => $value) {
+                            if ($key1 !== $key2 and preg_match($compare, $key2)) {
+                                unset($schema['properties'][$key1]);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         return $schema;
