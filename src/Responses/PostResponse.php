@@ -53,12 +53,8 @@ class PostResponse
                 ],
                 "required" => true
             ],
-            "responses" => self::getResponses(),
-            "security" => [
-                [
-                    "authorization" => []
-                ],
-            ]
+            "responses" => $route['responses'] ?? self::getResponses(),
+            "security" => config('swagger.security_schemes'),
         ];
         if ($route['need_token']) {
             $security_array = [];

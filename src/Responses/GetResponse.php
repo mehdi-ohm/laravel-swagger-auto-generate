@@ -38,12 +38,7 @@ class GetResponse
             "operationId" => $route['operation_id'],
             "parameters" => $route['params'],
             "responses" => $route['responses'] ?? self::getResponses(),
-            "security" => [
-                [
-                    "authorization" => [],
-                    "apiKey1" => []
-                ],
-            ]
+            "security" => config('swagger.security_schemes'),
         ];
         if (count($route['params']) == 0) {
             unset($response['parameters']);

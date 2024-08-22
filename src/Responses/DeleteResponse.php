@@ -39,12 +39,8 @@ class DeleteResponse
             "description" => $route['description'] ?: '',
             "operationId" => $route['operation_id'],
             "parameters" => $route['params'],
-            "responses" => self::getResponses(),
-            "security" => [
-                [
-                    "authorization" => []
-                ],
-            ]
+            "responses" => $route['responses'] ?? self::getResponses(),
+            "security" => config('swagger.security_schemes'),
         ];
         if (count($route['params']) == 0) {
             unset($response['parameters']);

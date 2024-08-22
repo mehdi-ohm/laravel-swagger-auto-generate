@@ -44,12 +44,12 @@ class PutResponse
             "requestBody" => [
                 "description" => $route['description'] ?: '',
                 "content" => [
-                    "application/x-www-form-urlencoded" => [
+                    "application/json" => [
                         "schema" => [
                             '$ref' => "#/components/schemas/{$route['schema_name']}"
                         ]
                     ],
-                    "application/json" => [
+                    "application/x-www-form-urlencoded" => [
                         "schema" => [
                             '$ref' => "#/components/schemas/{$route['schema_name']}"
                         ]
@@ -57,8 +57,8 @@ class PutResponse
                 ],
                 "required" => true
             ],
-            "responses" => self::getResponses($route),
-            "security" => config('swagger.security_schemes')
+            "responses" => $route['responses'] ?? self::getResponses($route),
+            "security" => config('swagger.security_schemes'),
         ];
         if ($route['need_token']) {
             $security_array = [];
