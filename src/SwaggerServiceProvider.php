@@ -22,6 +22,11 @@ class SwaggerServiceProvider extends ServiceProvider
             return $this;
         });
 
+        Route::macro('requestDescription', function ($responses) {
+            $this->action['request_description'] = $responses;
+            return $this;
+        });
+
         Route::macro('summary', function ($summary) {
             $this->action['summary'] = $summary;
             return $this;

@@ -1,6 +1,17 @@
 <?php
 
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Enable Swagger
+    |--------------------------------------------------------------------------
+    |
+    | Whether Swagger is enabled or not.
+    |
+    */
+    "enable" => env('SWAGGER_ENABLED', true),
+
     /*
     |--------------------------------------------------------------------------
     | API Title
@@ -108,16 +119,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Enable Swagger
-    |--------------------------------------------------------------------------
-    |
-    | Whether Swagger is enabled or not.
-    |
-    */
-    "enable" => env('SWAGGER_ENABLED', true),
-
-    /*
-    |--------------------------------------------------------------------------
     | Show Prefix
     |--------------------------------------------------------------------------
     |
@@ -211,59 +212,73 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Optional configurations
+    |--------------------------------------------------------------------------
+    |
+    | Optional configurations
+    |
+    */
+    'options' => [
+        // Allows only application/json for request
+        'only_json_request' => false,
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Status
     |--------------------------------------------------------------------------
     |
-    | HTTP response statuses for various methods.
+    | Custom HTTP response status for any methods.
     |
     */
     "status" => [
-        "GET" => [
-            "200" => [
-                "description" => "Successful Operation",
-            ],
-            "404" => [
-                "description" => "Not Found"
-            ]
-        ],
-        "POST" => [
-            "200" => [
-                "description" => "Successful Operation",
-            ],
-            "422" => [
-                "description" => "Validation Issues"
-            ]
-        ],
-        "PUT" => [
-            "200" => [
-                "description" => "Successful Operation",
-            ],
-            "404" => [
-                "description" => "Not Found"
-            ],
-            "405" => [
-                "description" => "Validation exception"
-            ]
-        ],
-        "PATCH" => [
-            "200" => [
-                "description" => "Successful Operation",
-            ],
-            "404" => [
-                "description" => "Not Found"
-            ],
-            "405" => [
-                "description" => "Validation exception"
-            ]
-        ],
-        "DELETE" => [
-            "200" => [
-                "description" => "successful Operation",
-            ],
-            "404" => [
-                "description" => "page Not Found"
-            ]
-        ],
+//        "GET" => [
+//            200 => [
+//                "description" => "Successful Operation",
+//            ],
+//            404 => [
+//                "description" => "Not Found"
+//            ]
+//        ],
+//        "POST" => [
+//            200 => [
+//                "description" => "Successful Operation",
+//            ],
+//            422 => [
+//                "description" => "Validation Issues"
+//            ]
+//        ],
+//        "PUT" => [
+//            200 => [
+//                "description" => "Successful Operation",
+//            ],
+//            404 => [
+//                "description" => "Not Found"
+//            ],
+//            422 => [
+//                "description" => "Validation Issues"
+//            ]
+//        ],
+//        "PATCH" => [
+//            200 => [
+//                "description" => "Successful Operation",
+//            ],
+//            404 => [
+//                "description" => "Not Found"
+//            ],
+//            422 => [
+//                "description" => "Validation Issues"
+//            ]
+//        ],
+//        "DELETE" => [
+//            200 => [
+//                "description" => "Successful Operation",
+//            ],
+//            404 => [
+//                "description" => "Page Not Found"
+//            ]
+//        ],
     ],
 
 ];

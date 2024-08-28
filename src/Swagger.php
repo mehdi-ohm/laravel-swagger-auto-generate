@@ -93,7 +93,9 @@ class Swagger
                         $validations = $this->getRequestClassName($action);
                         $schemaName = $this->schemaName($action);
                         if ($action !== 'Closure') {
-                            $description = isset($route->action['description']) ? $route->action['description'] : '';
+                            $description = $route->action['description'] ?? '';
+                            $requestDescription = $route->action['request_description'] ?? $description;
+                            $description = $description ?: $requestDescription;
                             $summary = isset($route->action['summary']) ? $route->action['summary'] : null;
                             $responses = $route->action['responses'] ?? [];
                             $prefix_for_condition = isset($show_prefix_array) && count($show_prefix_array) > 0 ? $show_prefix_array : ["$prefix"];
@@ -124,6 +126,7 @@ class Swagger
                                     'controller' => $controller,
                                     'uri' => $uri,
                                     'description' => $description,
+                                    'request_description' => $requestDescription,
                                     'summary' => $summary,
                                     'name' => $routeName,
                                     'schema_name' => $schemaName,
