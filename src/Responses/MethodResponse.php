@@ -130,6 +130,12 @@ class MethodResponse
             200 => [
                 "description" => "Successful operation",
             ],
+            401 => [
+                "description" => "Unauthorized",
+            ],
+            403 => [
+                "description" => "Forbidden",
+            ],
             404 => [
                 "description" => "The route ".$name." is not found",
             ],
