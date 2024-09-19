@@ -3,11 +3,15 @@
 namespace G4T\Swagger;
 
 use G4T\Swagger\Attributes\SwaggerSection;
+use G4T\Swagger\Requests\Contracts\RequestDocSwagger;
+use G4T\Swagger\Responses\Contracts\ResponseDocSwagger;
 use G4T\Swagger\Sections\Paths;
 use G4T\Swagger\Sections\Schemas;
 use G4T\Swagger\Sections\Tags;
+use G4T\Swagger\Utils\MethodInspector;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Illuminate\Routing\Route as IlluminateRoute;
 use ReflectionClass;
 use stdClass;
 
@@ -83,6 +87,7 @@ class Swagger
             if ($this->isApiRoute($route)) {
                 if (is_string($route->getAction('controller'))) {
                     $uri = '/' . $route->uri();
+//                    dd($uri, $version, str_contains($uri, $version));
                     if (str_contains($uri, $version)) {
                         $prefix = $route->getPrefix();
                         $action = ltrim($route->getActionName(), '\\');
@@ -94,10 +99,14 @@ class Swagger
                         $schemaName = $this->schemaName($action);
                         if ($action !== 'Closure') {
                             $description = $route->action['description'] ?? '';
-                            $requestDescription = $route->action['request_description'] ?? $description;
+                            $requestDescription = $route->action['request_description']
+                                ?? $this->getRequestDescriptionFromControllerMethodParameters($route)
+                                ?? $description;
                             $description = $description ?: $requestDescription;
                             $summary = isset($route->action['summary']) ? $route->action['summary'] : null;
-                            $responses = $route->action['responses'] ?? [];
+                            $responses = $route->action['responses']
+                                ?? $this->getSwaggerResponseFromControllerMethodReturn($route)
+                                ?? [];
                             $prefix_for_condition = isset($show_prefix_array) && count($show_prefix_array) > 0 ? $show_prefix_array : ["$prefix"];
                             if (in_array($prefix, $prefix_for_condition)) {
                                 $hasSchema = false;
@@ -163,6 +172,46 @@ class Swagger
         } catch (\Throwable $th) {
             return null;
         }
+    }
+
+    protected function getRequestDescriptionFromControllerMethodParameters(IlluminateRoute $route): ?string
+    {
+        if (empty($route->action['controller'])) {
+            return null;
+        }
+
+        $types = MethodInspector::getParametersType($route->action['controller']);
+        foreach ($types ?? [] as $typeText) {
+            if ($typeText and !in_array($typeText, ['Illuminate\Http\Request']) and class_exists($typeText)) {
+
+                $requester = new $typeText();
+                if ($requester instanceof RequestDocSwagger) {
+                    return $requester->getDescription() ?: null;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    protected function getSwaggerResponseFromControllerMethodReturn(IlluminateRoute $route): ?array
+    {
+        if (empty($route->action['controller'])) {
+            return null;
+        }
+
+        $types = MethodInspector::getReturnsType($route->action['controller']);
+        foreach ($types ?? [] as $typeText) {
+            if ($typeText and class_exists($typeText)) {
+
+                $requester = new $typeText();
+                if ($requester instanceof ResponseDocSwagger) {
+                    return $requester->getSwaggerResponses() ?: null;
+                }
+            }
+        }
+
+        return null;
     }
 
     private function getSectionAttributeValue(string $controllerClassName)
