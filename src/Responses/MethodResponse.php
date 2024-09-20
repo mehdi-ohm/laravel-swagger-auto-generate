@@ -42,7 +42,7 @@ class MethodResponse
         }
 
         // Remove request body
-        if (empty($route['has_schema']) or $route['method'] === 'GET') {
+        if (empty($route['has_schema']) or strpos($route['method'], 'GET') !== false) {
             unset($response['requestBody']);
         }
 
